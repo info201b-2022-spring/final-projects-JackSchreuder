@@ -1,4 +1,6 @@
-# Jack Schreuder Project Proposal
+# National Parks Project Proposal
+
+#### Jack Schreuder and Rudy Nguyen
 
 ## Domain of Interest
 
