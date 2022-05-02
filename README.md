@@ -1,6 +1,6 @@
 # final-projects-USNationalPark
 
-# Jack Schreuder Project Proposal
+# Jack Schreuder, Rudy Nguyen Project Proposal
 
 ## Domain of Interest
 
