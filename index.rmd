@@ -1,0 +1,17 @@
+---
+title: "index.rmd"
+output: html_document
+date: '2022-05-16'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Set Up
+
+Placeholder
+
+```{r ch1}
+# Placeholder
+```
