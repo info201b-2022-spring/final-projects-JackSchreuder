@@ -28,4 +28,8 @@ We propose a project based around studying the ecology and visitation of the US 
 - [Park Visitation Data](https://www.kaggle.com/datasets/karthickveerakumar/national-park)
   - This is also a kaggle data set it contains the log number of visitors for each national park between 2010 and 2016. Kaggle does not list how it was collected, although it was presumably compiled from public NPS reports like the first dataset. 12 columns, 25.6K rows. Can show the number of people who visit in a given year, or over a 6 year stretch, can combine to show by state, region, or park. Can also be broken down by month.
 - [State Area and Population Data](http://goodcsv.com/geography/us-states-territories/)
-  - This is from good CSV and includes the 2019 population for each state, as well as the area of each state, compiled from wikepedia. 7 columns, 53 rows. This set will be mainly used to assign state names and abbreviations, but also contains a simple column for population, and land area, which will be used for computed metrics.
+  - This is from good CSV and includes the 2019 population for each state, as well as the area of each state, compiled from wikepedia. 7 columns, 53 rows. This set will be mainly used to assign state names and abbreviations, but also contains a simple column for population, and land area, which will be used for computed metrics.  
+  
+  Push test - Rudy
+
+
