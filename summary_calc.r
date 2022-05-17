@@ -1,5 +1,6 @@
 # This Doc for calculating summary info
 library(dplyr)
+library(stringr)
 
 # Making dfs and basic notes from park visits data
 park_visits <- read.csv("park_visits.csv")
@@ -22,4 +23,13 @@ lv_park_year <- paste0(least_vis_park$ParkName, ", ", least_vis_park$Year)
 
 # Making dfs with parks data
 parks <- read.csv("parks.csv")
+parks$Park.Name <- str_replace(parks$Park.Name, "National Park", "NP")
+state_np_area <- parks %>% group_by(State) %>% summarise(total_area = sum(Acres))
+largest_park <- (filter(parks, Acres == max(parks$Acres))) %>% select(Park.Name, State)
+largest_park <- paste0(largest_park$Park.Name, ", ", largest_park$State)
 
+smallest_park <- filter(parks, Acres == min(parks$Acres)) %>% select(Park.Name, State)
+smallest_park <- paste0(smallest_park$Park.Name, ", ", smallest_park$State)
+
+joint_park_df <- merge(x=park_visits, y=parks, by.x = "ParkName", by.y = "Park.Name")
+joint_park_df <- select(joint_park_df, ParkName, ParkType, Region, State.x, Year, Month, logVisits, visitors_millions, Acres)
