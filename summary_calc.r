@@ -15,6 +15,11 @@ most_vis_region <- (filter(vis_by_region, total_vis == max(vis_by_region$total_v
 least_vis_region <- (filter(vis_by_region, total_vis == min(vis_by_region$total_vis)))$Region
 
 most_vis_park <- filter(by_park_year, total_vis == max(by_park_year$total_vis)) %>% select(ParkName, Year)
+mv_park_year <- paste0(most_vis_park$ParkName, ", ", most_vis_park$Year)
+
+least_vis_park <- filter(by_park_year, total_vis == min(by_park_year$total_vis)) %>% select(ParkName, Year)
+lv_park_year <- paste0(least_vis_park$ParkName, ", ", least_vis_park$Year)
 
 # Making dfs with parks data
 parks <- read.csv("parks.csv")
+
