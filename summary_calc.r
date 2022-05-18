@@ -2,6 +2,15 @@
 library(dplyr)
 library(stringr)
 
+# Things we need still:
+# max, min, mean of visitor to acreage ratio
+# state, region w/ most acreage
+# Year w/ most visitors
+# mean, median of park visitors for 6 years
+# Number of parks
+# State w/ most parks
+# region w/ most parks
+
 # Making dfs and basic notes from park visits data
 park_visits <- read.csv("park_visits.csv")
 park_visits <- park_visits %>% filter(ParkType == "National Park") %>% mutate(visitors_millions = (10^logVisits)/1000000)
