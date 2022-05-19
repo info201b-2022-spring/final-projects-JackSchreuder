@@ -55,6 +55,7 @@ least_vis_per_acre <- paste0(least_vis_per_acre$ParkName, ", ", least_vis_per_ac
 
 num_parks <- nrow(parks)
 
+# Summary info list
 summary_info <- list()
 summary_info$num_parks <- num_parks
 summary_info$largest_park <- largest_park
