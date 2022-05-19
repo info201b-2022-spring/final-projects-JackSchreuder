@@ -8,10 +8,43 @@ date: '2022-05-16'
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Set Up
+## Introduction
 
 Placeholder
 
-```{r ch1}
-# Placeholder
+## Summary Information
+
+```{r summary_calc}
+# Report Summary info
 ```
+
+## Table
+
+```{r display_table}
+# insert table
+```
+
+### Table Description
+
+Placeholder description
+
+## Charts
+
+### Chart 1
+
+```{r chart1}
+# insert chart1
+```
+
+### Chart 2
+
+```{r chart2}
+# insert chart 2
+```
+
+### Chart 3
+
+```{r chart3}
+# insert chart3
+```
+
