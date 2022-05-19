@@ -1,24 +1,19 @@
 # This doc for the first chart
 library(ggplot2)
 library(dplyr)
+library(forcats)
 
-park_visits <- read.csv("park_visits.csv")
+# Make sure to run summary calc first
+chart1_df <- vis_to_acre %>% group_by(State) %>% summarise(statewide_ratio = (sum(total_vis)/sum(Acres)))
 
-park_visits_chart <- park_visits %>% 
-  filter(ParkType == "National Park") %>% 
-  mutate(visitors = (10^logVisits))
+median_swr <- median(chart1_df$statewide_ratio)
 
-vis_by_region_chart <- park_visits_chart %>% 
-  group_by(Region) %>% summarise(log_total_vis = log10(sum(visitors)))
+chart1_df <- chart1_df %>%
+  filter(statewide_ratio >= median_swr) %>%
+  mutate(State = fct_reorder(State, statewide_ratio))
 
-reg_vis_plot <- ggplot(
-  vis_by_region_chart, 
-  aes(x=Region, y=log_total_vis)
-) + geom_bar(stat="identity")
+chart1 <- ggplot(chart1_df, aes(x=State, y=statewide_ratio))+
+  geom_bar(stat="identity")+
+  theme(axis.text.x = element_text(angle = -20))
 
-print(
-  reg_vis_plot + labs(
-    title = "Regions by visitation over 6 years", 
-    x = "US Region", 
-    y = "Visitors 2010-16 (log10)")
-)
+print(chart1)

@@ -65,7 +65,7 @@ The vis_to_acre table shows each national park's millions of visitors to acres r
 ### Chart 1
 
 ```{r chart1}
-# insert chart1
+chart1
 ```
 
 ### Chart 2
