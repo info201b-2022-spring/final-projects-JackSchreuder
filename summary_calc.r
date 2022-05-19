@@ -2,7 +2,6 @@
 library(dplyr)
 library(stringr)
 
-
 # Making dfs and basic notes from park visits data
 park_visits <- read.csv("park_visits.csv")
 park_visits <- park_visits %>% filter(ParkType == "National Park") %>% mutate(visitors_millions = (10^logVisits)/1000000)
