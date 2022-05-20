@@ -17,3 +17,14 @@ vis_by_state <- park_visits %>% group_by(State) %>% summarise(total_vis = sum(vi
 
 # vis_by_state shows how many millions of visitors visited any national park in a state over the time period
 print(vis_by_state)
+
+total_vis_per_park <- by_park_year %>% group_by(ParkName) %>% summarise(total_vis = sum(total_vis))
+total_vis_per_park$ParkName <- str_to_title(total_vis_per_park$ParkName)
+total_vis_per_park$ParkName <- str_replace(total_vis_per_park$ParkName, "Np", "NP")
+total_vis_per_park$ParkName <- str_replace(total_vis_per_park$ParkName, "Pres", "PRES")
+vis_to_acre <- merge(x=total_vis_per_park, y=parks, by.x = "ParkName", by.y = "Park.Name")
+vis_to_acre <- select(vis_to_acre, -c(Park.Code, Latitude, Longitude))
+vis_to_acre <- mutate(vis_to_acre, vis_acre_ratio = total_vis / Acres)
+
+# vis to acre shows the ratio of millions of visitors to land area of the parks.
+print(vis_to_acre)

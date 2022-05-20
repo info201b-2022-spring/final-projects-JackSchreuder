@@ -6,35 +6,68 @@ date: '2022-05-16'
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(dplyr)
 ```
+
+#### Preliminary Note
+
+Please note that you will need to run all script files prior to running this file, such that you have all the required objects saved to your environment.
 
 ## Introduction
 
-Placeholder
+This report studies the visitation of the United States National Parks Service. We break down based on state and region to determine which state makes the best use of their national park(s). We include data about the size of each park to compare if larger parks get more visitors, and also to see what the ratio of park size to visitors is (ie which park earns the most "bang for its buck). Parks that are smaller and have higher visitation are more efficient and garner more business for the NPS. These parks however are not to be exalted in comparison to those with a very low visitor to area ratio (meaning there are many fewer visitors per acre of land). We claim that the parks with the lowest ratio of visitors to area are the most successful at maintaining and untouched landscape. These parks take large areas and keep them the most clear of human presence.
 
 ## Summary Information
 
 ```{r summary_calc}
-# Report Summary info
+View(summary_info)
 ```
+
+### Summary Info Component Description
+
+- num_parks: represents the number of parks present in the data
+- largest_park: represents the park which encompasses the largest land area
+- smallest_park: represents the park which encompasses the least land area
+- most_visited_state: shows the state that had the most visitors to any of its national parks between 2010 and 2016
+- least_visited_state: shows the state that had the fewest visitors in the timeframe (Note: American Samoa is not a state, rather a territory. It does contain a national park though, so it is included)
+- most_visited_region: the region with the most visitors over the timeframe
+- least_visited_region: the region with the least visitors over the timeframe (Note: Alaska is its own region)
+- most_visited_park_for_year: the park which had the most visitors accross the whole dataframe, and the year it took place
+- least_visited_park_for_year: the park with the fewest visitors accross the data frame, and the year it occured. Note: there was a tie for this, so both instances are included.
+- most_visited_per_acre: shows the park with the highest visitors per acre, and the ratio itself
+- least_visited_per_acre: shows the park with the least visitors per acre, and the ratio itself
 
 ## Table
 
 ```{r display_table}
-# insert table
+View(state_np_area)
+View(vis_by_state)
+View(vis_to_acre)
 ```
 
 ### Table Description
 
-Placeholder description
+##### State NP Area
+
+The state_np_area table shows each state that has a national park, and lists the total area that is in that state. The purpose here is to show which states have allocated the most land towards National Parks
+
+##### Visitation by State
+
+The vis_by_state table shows each state's total visitation from 2010-2016. This is not necessarily correlated with the state area table, but does show which states have the msot visited National Park sites.
+
+##### Visitation per Acre
+
+The vis_to_acre table shows each national park's millions of visitors to acres ratio. For example, a ration of 12 would indicate that over the 6 year time period, there were 12 million visitors per 1 acre of that national park.
 
 ## Charts
 
 ### Chart 1
 
 ```{r chart1}
-# insert chart1
+chart1
 ```
+This chart illustrates which states have the highest ratio of visitors to park area. The graph displays the highest half in the data set. Note that there are several instances of multiple states being listed, this is because some national parks are one the border of two or more states. These states are the ones that we claim are the most guilty of enclosing commons, in the form of a national park. The other really notable thing is how sharply the ratio increases, after Colorado, the ratio skyrockets upwards. This can be explained in a few different ways, drawing inference from the summary info list. First, we notice that Arkansas, the state that contains the smallest national park, has a high ratio, this is to be expected if that small park receives even a moderate amount of visitors. Second, Tennessee and North Carolina share the Great Smoky Mountain National Park, which had the highest visitation year recorded in the data set. And unsurprisingly, Maine has the highest ratio, thanks to Acadia National Park, which has the biggest ratio for a single park.
 
 ### Chart 2
 
@@ -45,6 +78,7 @@ Placeholder description
 ### Chart 3
 
 ```{r chart3}
-# insert chart3
+chart_3
 ```
 
+This chart is  meant to show the visitation to the entire NP system across the time period to determine if more people are visiting more recently. Overall, the number seems to be increasing, with a big outlier in 2012, but still a notable positive trend. This means that more and more people are visiting National Parks. This could be explained in a few different ways, although the data we've included doesn't prove any of these suppositions. Firstly, it could be that the steady growth of the human race is responsible for the amount of people going to parks. This is unlikely, and the data is over too short a time period to prove this. Secondly, it  could be that people first visit one National Park nearest them, and a year or two later travel to one or more other national parks and/or frequently return to the one nearest them.
