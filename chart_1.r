@@ -9,7 +9,8 @@ park_visits_chart <- park_visits %>%
   mutate(visitors = (10^logVisits))
 
 vis_by_region_chart <- park_visits_chart %>% 
-  group_by(Region) %>% summarise(log_total_vis = log10(sum(visitors)))
+  group_by(Region) %>% 
+  summarise(log_total_vis = log10(sum(visitors)))
 
 reg_vis_plot <- ggplot(
   vis_by_region_chart, 
