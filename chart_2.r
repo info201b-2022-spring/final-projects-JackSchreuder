@@ -44,7 +44,7 @@ chart_2 <- plot_usmap(data = chart_2_df, regions = "states") +
     label = scales::comma) +
   labs(title = "U.S. States",
        subtitle = "Ratio of Visitors to Population by State") +
-  theme(legend.position = "left")
+  theme(legend.position = "right")
 
 print(chart_2)
 
