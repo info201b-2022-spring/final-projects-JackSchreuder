@@ -4,6 +4,7 @@ library(ggplot2)
 library(dplyr)
 library(viridis)
 library(hrbrthemes)
+library(usmap)
 
 us_states_territories <- read.csv("us-states-territories.csv")
 park_visits <- read.csv("park_visits.csv")
@@ -14,9 +15,9 @@ us_states_territories <- us_states_territories %>%
 
 colnames(
   us_states_territories)[
-    which(names(us_states_territories) == "Abbreviation")] <- "State"
+    which(names(us_states_territories) == "Abbreviation")] <- "state"
 
-us_states_territories$State <- str_sub(us_states_territories$State, end=2)
+us_states_territories$state <- str_sub(us_states_territories$state, end=2)
 us_states_territories$Population..2019. <- 
   str_replace_all(us_states_territories$Population..2019., ',', '')
 
@@ -25,21 +26,25 @@ total_visitor_state <- park_visits %>%
   group_by(State) %>% 
   summarise(total_visitor = sum(logVisits))
 
+colnames(total_visitor_state)[1] <- "state"
+
 chart_2_df <- merge(
   x=total_visitor_state,
   y=us_states_territories,
-  by="State"
+  by="state"
 )
 
-chart_2_df <- chart_2_df %>% 
-  mutate(ratio = total_visitor/as.numeric(Population..2019.))
+chart_2_df <- chart_2_df %>%
+  mutate(values = total_visitor/as.numeric(Population..2019.))
 
-mean_ratio <- mean(chart_2_df$ratio)
-  
-chart_2 <- ggplot(chart_2_df, aes(x= State, y = ratio)) + 
-  geom_bar(stat = 'identity', aes(fill = ratio>mean_ratio), position = 'dodge', col = 'transparent') + 
-  theme_bw() + scale_fill_discrete(guide = 'none') + 
-  labs(x = '', y = 'NAO Index')
+chart_2 <- plot_usmap(data = chart_2_df, regions = "states") +
+  scale_fill_continuous(
+    low = "light yellow", high = "dark red", 
+    name = "NP visitors to population ratio", 
+    label = scales::comma) +
+  labs(title = "U.S. States",
+       subtitle = "Ratio of Visitors to Population by State") +
+  theme(legend.position = "left")
 
 print(chart_2)
 
