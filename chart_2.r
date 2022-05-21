@@ -10,31 +10,36 @@ park_visits <- read.csv("park_visits.csv")
 
 us_states_territories <- us_states_territories %>% 
   filter(Type == "State") %>% 
-  select(Abbreviation, Population..2019., area..square.miles.)
+  select(Abbreviation, Population..2019.)
 
 colnames(
   us_states_territories)[
     which(names(us_states_territories) == "Abbreviation")] <- "State"
 
-mean_visitor <- park_visits %>%
+us_states_territories$State <- str_sub(us_states_territories$State, end=2)
+us_states_territories$Population..2019. <- 
+  str_replace_all(us_states_territories$Population..2019., ',', '')
+
+total_visitor_state <- park_visits %>%
   filter(Year == "2016", ParkType == "National Park") %>% 
-  group_by(ParkName, State) %>% 
-  summarise(mean_visitors = mean(logVisits), .groups = 'drop') %>% 
   group_by(State) %>% 
-  summarise(total_mean_visitors = sum(mean_visitors))
+  summarise(total_visitor = sum(logVisits))
 
 chart_2_df <- merge(
-  x=mean_visitor,
+  x=total_visitor_state,
   y=us_states_territories,
   by="State"
 )
 
-chart_2 <- ggplot(
-  data = mean_visitor, 
-  aes(x=State, y=total_mean_visitors)) + 
-  geom_area(alpha=0.6 , size=.5, colour="white") +
-  scale_fill_viridis(discrete = T) +
-  theme_ipsum() + 
-  ggtitle("mean")
+chart_2_df <- chart_2_df %>% 
+  mutate(ratio = total_visitor/as.numeric(Population..2019.))
+
+mean_ratio <- mean(chart_2_df$ratio)
+  
+chart_2 <- ggplot(chart_2_df, aes(x= State, y = ratio)) + 
+  geom_bar(stat = 'identity', aes(fill = ratio>mean_ratio), position = 'dodge', col = 'transparent') + 
+  theme_bw() + scale_fill_discrete(guide = 'none') + 
+  labs(x = '', y = 'NAO Index')
 
 print(chart_2)
+
