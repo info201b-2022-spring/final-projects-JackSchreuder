@@ -24,69 +24,11 @@ This report studies the visitation of the United States National Parks Service. 
 ## Summary Information
 
 ```{r summarycomp, include=FALSE}
-park_visits <- read.csv("park_visits.csv")
-
-park_visits <- park_visits %>% filter(ParkType == "National Park") %>% mutate(visitors_millions = (10^logVisits)/1000000)
-by_park_year <- park_visits %>% group_by(ParkName, Year) %>% summarise(total_vis = sum(visitors_millions))
-vis_by_region <- park_visits %>% group_by(Region) %>% summarise(total_vis = sum(visitors_millions))
-vis_by_state <- park_visits %>% group_by(State) %>% summarise(total_vis = sum(visitors_millions))
-
-most_vis_state <- (filter(vis_by_state, total_vis == max(vis_by_state$total_vis)))$State
-least_vis_state <- (filter(vis_by_state, total_vis == min(vis_by_state$total_vis)))$State
-
-most_vis_region <- (filter(vis_by_region, total_vis == max(vis_by_region$total_vis)))$Region
-least_vis_region <- (filter(vis_by_region, total_vis == min(vis_by_region$total_vis)))$Region
-
-most_vis_park <- filter(by_park_year, total_vis == max(by_park_year$total_vis)) %>% select(ParkName, Year)
-mv_park_year <- paste0(most_vis_park$ParkName, ", ", most_vis_park$Year)
-
-least_vis_park <- filter(by_park_year, total_vis == min(by_park_year$total_vis)) %>% select(ParkName, Year)
-lv_park_year <- paste0(least_vis_park$ParkName, ", ", least_vis_park$Year)
-
-parks <- read.csv("parks.csv")
-parks$Park.Name <- str_to_title(parks$Park.Name)
-parks$Park.Name <- str_replace(parks$Park.Name, "National Park", "NP")
-parks$Park.Name <- str_replace(parks$Park.Name, "And Preserve", "& PRES")
-parks$Park.Name <- str_replace(parks$Park.Name, " - St", "-St.")
-state_np_area <- parks %>% group_by(State) %>% summarise(total_area = sum(Acres))
-largest_park <- (filter(parks, Acres == max(parks$Acres))) %>% select(Park.Name, State)
-largest_park <- paste0(largest_park$Park.Name, ", ", largest_park$State)
-
-smallest_park <- filter(parks, Acres == min(parks$Acres)) %>% select(Park.Name, State)
-smallest_park <- paste0(smallest_park$Park.Name, ", ", smallest_park$State)
-
-joint_park_df <- merge(x=park_visits, y=parks, by.x = "ParkName", by.y = "Park.Name")
-joint_park_df <- select(joint_park_df, ParkName, ParkType, Region, State.x, Year, Month, logVisits, visitors_millions, Acres)
-
-total_vis_per_park <- by_park_year %>% group_by(ParkName) %>% summarise(total_vis = sum(total_vis))
-total_vis_per_park$ParkName <- str_to_title(total_vis_per_park$ParkName)
-total_vis_per_park$ParkName <- str_replace(total_vis_per_park$ParkName, "Np", "NP")
-total_vis_per_park$ParkName <- str_replace(total_vis_per_park$ParkName, "Pres", "PRES")
-vis_to_acre <- merge(x=total_vis_per_park, y=parks, by.x = "ParkName", by.y = "Park.Name")
-vis_to_acre <- select(vis_to_acre, -c(Park.Code, Latitude, Longitude))
-vis_to_acre <- mutate(vis_to_acre, vis_acre_ratio = total_vis / Acres)
-most_vis_per_acre <- (filter(vis_to_acre, vis_acre_ratio == max(vis_to_acre$vis_acre_ratio))) %>%
-  select(ParkName, vis_acre_ratio)
-most_vis_per_acre <- paste0(most_vis_per_acre$ParkName, ", ", most_vis_per_acre$vis_acre_ratio, " million visitors per acre")
-
-least_vis_per_acre <- (filter(vis_to_acre, vis_acre_ratio == min(vis_to_acre$vis_acre_ratio))) %>%
-  select(ParkName, vis_acre_ratio)
-least_vis_per_acre <- paste0(least_vis_per_acre$ParkName, ", ", least_vis_per_acre$vis_acre_ratio, " million visitors per acre")
-
-num_parks <- nrow(parks)
-
-summary_info <- list()
-summary_info$num_parks <- num_parks
-summary_info$largest_park <- largest_park
-summary_info$smallest_park <- smallest_park
-summary_info$most_visited_state <- most_vis_state
-summary_info$least_visited_state <- least_vis_state
-summary_info$most_visited_region <- most_vis_region
-summary_info$least_visited_region <- least_vis_region
-summary_info$most_visited_park_for_year <- mv_park_year
-summary_info$least_visited_park_for_year <- lv_park_year
-summary_info$highest_vis_per_acre <- most_vis_per_acre
-summary_info$lowest_vis_per_acre <- least_vis_per_acre
+source("summary_calc.r")
+source("chart_1.r")
+source("chart_2.r")
+source("chart_3.r")
+source("summary_table.r")
 ```
 
 ```{r summary_calc}
@@ -133,20 +75,6 @@ The vis_to_acre table shows each national park's millions of visitors to acres r
 
 ### Chart 1
 
-```{r ch1_creation, include=FALSE}
-chart1_df <- vis_to_acre %>% group_by(State) %>% summarise(statewide_ratio = (sum(total_vis)/sum(Acres)))
-
-median_swr <- median(chart1_df$statewide_ratio)
-
-chart1_df <- chart1_df %>%
-  filter(statewide_ratio >= median_swr) %>%
-  mutate(State = fct_reorder(State, statewide_ratio))
-
-chart1 <- ggplot(chart1_df, aes(x=State, y=statewide_ratio))+
-  geom_bar(stat="identity")+
-  theme(axis.text.x = element_text(angle = -20))
-```
-
 ```{r chart1}
 chart1
 ```
@@ -155,47 +83,6 @@ This chart illustrates which states have the highest ratio of visitors to park a
 
 ### Chart 2
 
-```{r ch2_create, include=FALSE}
-us_states_territories <- read.csv("us-states-territories.csv")
-park_visits <- read.csv("park_visits.csv")
-
-us_states_territories <- us_states_territories %>% 
-  filter(Type == "State") %>% 
-  select(Abbreviation, Population..2019.)
-
-colnames(
-  us_states_territories)[
-    which(names(us_states_territories) == "Abbreviation")] <- "state"
-
-us_states_territories$state <- str_sub(us_states_territories$state, end=2)
-us_states_territories$Population..2019. <- 
-  str_replace_all(us_states_territories$Population..2019., ',', '')
-
-total_visitor_state <- park_visits %>%
-  filter(Year == "2016", ParkType == "National Park") %>% 
-  group_by(State) %>% 
-  summarise(total_visitor = sum(logVisits))
-
-colnames(total_visitor_state)[1] <- "state"
-
-chart_2_df <- merge(
-  x=total_visitor_state,
-  y=us_states_territories,
-  by="state"
-)
-
-chart_2_df <- chart_2_df %>%
-  mutate(values = total_visitor/as.numeric(Population..2019.))
-
-chart_2 <- plot_usmap(data = chart_2_df, regions = "states") +
-  scale_fill_continuous(
-    low = "light yellow", high = "dark red", 
-    name = "NP visitors to population ratio", 
-    label = scales::comma) +
-  labs(title = "U.S. States",
-       subtitle = "Ratio of Visitors to Population by State") +
-  theme(legend.position = "right")
-```
 
 ```{r chart2}
 chart_2
@@ -204,16 +91,6 @@ chart_2
 This is a map that illustrates the ratio of national park visitors to population in each state. A lot of states seem to have insufficient data, so they are not shown on the map. However, a trend can still be seen that the visitors and population ratio seem to be higher in the middle area of the U.S. with the outlier being Alaska. This is reasonable because the value in the map depends solely on the population number and visitor number. States that are closer to the sea coast have a larger, denser population, which also means that there will be less space for national parks and more space for people. Alaska is a special case because of its cold environment, there are less people who are willing to live there, but national parks in Alaska are more attractive to visitors. Hence, it makes Alaska having the highest visitor to population ratio in the U.S.
 ### Chart 3
 
-```{r ch3_create, include=FALSE}
-chart3_df <- park_visits %>% group_by(Year) %>% summarise(total_log_vis = sum(logVisits))
-
-chart_3 <- ggplot(data = chart3_df, aes(x=Year, y=total_log_vis)) +
-  geom_line(color="blue") +
-  geom_point() +
-  ggtitle("Park Visitation 2010-2016") +
-  xlab("Year") +
-  ylab("Visitors (log)")
-```
 
 ```{r chart3}
 chart_3

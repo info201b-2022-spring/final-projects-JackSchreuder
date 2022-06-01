@@ -16,8 +16,7 @@ ui <- fluidPage(
                        p("Example Paragraph that contains useful words and such")),
               tabPanel(title = "Exploratory Chart 1",
                        h2("Explore the relationship between park acreage and visitation:"),
-                       plotOutput("exch1", click = "ch1_click"),
-                       tableOutput("ch1_info")
+                       plotlyOutput("exch1"),
                        ),
               tabPanel("Exploratory Chart 2"),
               tabPanel(title = "Exploratory Chart 3",
@@ -34,13 +33,16 @@ ui <- fluidPage(
 )
 
 server <- function(input, output) {
-  output$exch1 <- renderPlot({
-    ggplot(vis_to_acre, aes(x=Acres, y=total_vis))+
-      geom_point()
+  output$exch1 <- renderPlotly({
+    ch1 <- plot_ly(vis_to_acre, x = ~Acres, y = ~total_vis, type = 'scatter', mode = 'markers',
+                   text = ~paste(ParkName, "<br>Visitor/Acreage ratio: ", (round(vis_acre_ratio, digits = 5)), State))
+    ch1 <- ch1 %>%
+      add_trace(
+        marker = list(color='green', size = ~vis_acre_ratio, sizeref = 4, sizemode = 'area'),
+        showlegend = F
+      )
   })
-  output$ch1_info <- renderTable({
-    nearPoints(vis_to_acre, input$ch1_click, xvar = "Acres", yvar = "total_vis")
-  })
+
   output$exch3 <- renderPlot({
     filtered_df <- vis_region_year %>% filter(Region %in% input$regions)
     ggplot(filtered_df, aes(x=Year, y=total_vis, color=Region))+
