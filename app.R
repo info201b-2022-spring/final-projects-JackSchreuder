@@ -13,9 +13,21 @@ ui <- fluidPage(
               tabPanel(title = "Introduction",
                        h2("Introduction to Our National Parks Analysis"),
                        h4("Jack Schreuder and Rudy Nguyen"),
-                       p("Example Paragraph that contains useful words and such")),
+                       p("This report will explore the effectiveness of the US National Parks Service.
+                         There are two modes in which a National Park can be successful. 1. They reciece a high number
+                         of visitors. 2. They conserve a large amount of land."),
+                       p("The National Parks were initially created as a part of the mythic frontier in a national panic
+                         about men growing soft and out of touch with primal nature. To solve this, Teddy Roosevelt, joined
+                         by environmentalists and transcendentalists begun a campaign to preserve the most epic pieces of
+                         untouched land in the country. The result was places like Yosemite, Yellowstone, Mount Rainier, etc.
+                         The question is: Which was most effective, preserving land, or providing a place to make sure there
+                         weren't any more soft men? Our report will use data to explore data and trends to gain insight into
+                         the answers of these questions.")
+                       ),
               tabPanel(title = "Exploratory Chart 1",
                        h2("Explore the relationship between park acreage and visitation:"),
+                       h4("2010-16 Park Visitation (millions) vs Park area (acres)"),
+                       h6("Size of each point corresponds to the visitor / acres ratio"),
                        plotlyOutput("exch1"),
                        ),
               tabPanel("Exploratory Chart 2"),
@@ -46,7 +58,10 @@ server <- function(input, output) {
   output$exch3 <- renderPlot({
     filtered_df <- vis_region_year %>% filter(Region %in% input$regions)
     ggplot(filtered_df, aes(x=Year, y=total_vis, color=Region))+
-      geom_line()
+      geom_line()+
+      labs(title = "Visitation by Region 2010-16",
+           x = "Time (Years)",
+           y = "Visitors (Millions)")
   })
 }
 
