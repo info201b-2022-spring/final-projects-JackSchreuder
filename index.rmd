@@ -65,7 +65,7 @@ The vis_to_acre table shows each national park's millions of visitors to acres r
 ### Chart 1
 
 ```{r chart1}
-chart1
+chart_1
 ```
 This chart illustrates which states have the highest ratio of visitors to park area. The graph displays the highest half in the data set. Note that there are several instances of multiple states being listed, this is because some national parks are one the border of two or more states. These states are the ones that we claim are the most guilty of enclosing commons, in the form of a national park. The other really notable thing is how sharply the ratio increases, after Colorado, the ratio skyrockets upwards. This can be explained in a few different ways, drawing inference from the summary info list. First, we notice that Arkansas, the state that contains the smallest national park, has a high ratio, this is to be expected if that small park receives even a moderate amount of visitors. Second, Tennessee and North Carolina share the Great Smoky Mountain National Park, which had the highest visitation year recorded in the data set. And unsurprisingly, Maine has the highest ratio, thanks to Acadia National Park, which has the biggest ratio for a single park.
 

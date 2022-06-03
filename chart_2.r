@@ -5,7 +5,13 @@ library(dplyr)
 library(viridis)
 library(hrbrthemes)
 library(usmap)
+library(stringr)
+library(shiny)
+library(tidyverse)
+library(plotly)
+# source("app_server.r")
 
+parks <- read.csv("parks.csv")
 us_states_territories <- read.csv("us-states-territories.csv")
 park_visits <- read.csv("park_visits.csv")
 
@@ -22,9 +28,10 @@ us_states_territories$Population..2019. <-
   str_replace_all(us_states_territories$Population..2019., ',', '')
 
 total_visitor_state <- park_visits %>%
-  filter(Year == "2016", ParkType == "National Park") %>% 
-  group_by(State) %>% 
-  summarise(total_visitor = sum(logVisits))
+  filter(Year == "2014", ParkType == "National Park") %>% 
+  group_by(State) %>%
+  summarise(total_visitor_2016 = sum(logVisits, na.rm = TRUE))
+
 
 colnames(total_visitor_state)[1] <- "state"
 
@@ -35,16 +42,15 @@ chart_2_df <- merge(
 )
 
 chart_2_df <- chart_2_df %>%
-  mutate(values = total_visitor/as.numeric(Population..2019.))
+  mutate(values = total_visitor_2016)
 
 chart_2 <- plot_usmap(data = chart_2_df, regions = "states") +
   scale_fill_continuous(
-    low = "light yellow", high = "dark red", 
-    name = "NP visitors to population ratio", 
+    low = "light yellow", high = "dark red",
+    name = "NP visitors to population ratio",
     label = scales::comma) +
   labs(title = "U.S. States",
        subtitle = "Ratio of Visitors to Population by State") +
   theme(legend.position = "right")
 
 print(chart_2)
-
