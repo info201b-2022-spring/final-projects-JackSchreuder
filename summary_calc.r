@@ -8,6 +8,7 @@ park_visits <- read.csv("park_visits.csv")
 park_visits <- park_visits %>% filter(ParkType == "National Park") %>% mutate(visitors_millions = (10^logVisits)/1000000)
 by_park_year <- park_visits %>% group_by(ParkName, Year) %>% summarise(total_vis = sum(visitors_millions))
 vis_by_region <- park_visits %>% group_by(Region) %>% summarise(total_vis = sum(visitors_millions))
+vis_region_year <- park_visits %>% group_by(Region, Year) %>% summarise(total_vis = sum(visitors_millions))
 vis_by_state <- park_visits %>% group_by(State) %>% summarise(total_vis = sum(visitors_millions))
 
 most_vis_state <- (filter(vis_by_state, total_vis == max(vis_by_state$total_vis)))$State
