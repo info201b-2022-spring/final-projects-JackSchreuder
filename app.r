@@ -70,7 +70,16 @@ ui <- fluidPage(
                          the points that are very small. Further, the points on the far right side of the graph best accomplish
                          this, since they have the largest area, and thus conserve the largest amount of land."),
                        h4("What we learned from chart 2:"),
-                       p("Things we learned..."),
+                       p("There are only 27 states that has at least one national park. Other states without national parks 
+                         have something similar instead. For example, Idaho has National Monuments and National Historical Parks 
+                         but no National Parks. In chart 2, we learned that there is a trend where states with fewer citizens living  
+                         are more likely to have more national park visitors. This could be explained that fewer people living will 
+                         increase the quality of the national parks, making them feel more natural. We know that population is not 
+                         the only factor that explains the visitor numbers; there are other things like the location, the quality of 
+                         the national park and how it is advertised as well. Hence, we can see some outlier states in the East and 
+                         North on the map. Speaking of outliers, California is a special outlier since it has the highest value in both 
+                         the population and visitor numbers out of all states. This might be that California pays more attention and 
+                         invests more on national park tourism than other states."),
                        h4("What we learned from chart 3:"),
                        p("Chart 3 is important because it shows that national park visitation is trending upward, which means
                          more people are getting to see the beautiful parts of the country. This is generally a good thing for
@@ -116,7 +125,7 @@ server <- function(input, output) {
       str_replace_all(us_states_territories$Population..2019., ',', '')
     
     total_visitor_state <- park_visits %>%
-      filter(Year == "2014", ParkType == "National Park") %>% 
+      filter(Year == "2016", ParkType == "National Park") %>% 
       group_by(State) %>%
       summarise(total_visitor_2016 = sum(logVisits, na.rm = TRUE))
     

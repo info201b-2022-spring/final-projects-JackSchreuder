@@ -9,7 +9,6 @@ library(stringr)
 library(shiny)
 library(tidyverse)
 library(plotly)
-# source("app_server.r")
 
 parks <- read.csv("parks.csv")
 us_states_territories <- read.csv("us-states-territories.csv")
